@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.4.7/plyr.css" />
+    <title>Stweam</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        height: 100vh;
+        background-color: aliceblue;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      .plyr-card {
+        /* position: relative; */
+        overflow: hidden;
+        /* display: flex; */
+        /* flex-direction: column; */
+        box-shadow: 0 0 20px 0 rgb(0 0 0 / 0.2);
+        background-color: white;
+        border-radius: 10px;
+        width: 400px;
+        /* height: 300px; */
+      }
+      .plyr-card-title {
+        font-size: 32px;
+        font-weight: 100;
+        color: rgb(0 0 0 / 0.2);
+        padding: 0.5em 1em;
+      }
+      .plyr-container {
+        margin: 0 auto;
+        width: 100%;
+        /* position: absolute; */
+        /* bottom: 0; */
+      }
+      .track-list {
+        padding: 0 2em;
+        /* line-height: 2em; */
+        /* height: 200px; */
+        /* overflow-y: scroll; */
+        /* width: 100%; */
+      }
+      .track-list > li {
+        cursor: pointer;
+        list-style-type: none;
+        padding: 15px 40px;
+        background-color: aliceblue;
+        margin: 5px 0;
+        border-radius: 5px;
+        /* box-shadow: 0 0 2px 0 rgba(0 0 0 / 0.2); */
+        /* display: none; */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="plyr-card">
+      <div class="plyr-card-title"><span>track list</span></div>
+      <div class="track-list"></div>
+      <!-- autoplay -->
+      <div class="plyr-container">
+        <audio id="player" controls>Your browser does not support the audio element.</audio>
+      </div>
+    </div>
+
+    <script src="https://cdn.plyr.io/3.4.7/plyr.polyfilled.js"></script>
+    <script>
+      const player = new Plyr("#player");
+      // var title = 0;
+
+      // document.querySelector(".track-list > li").addEventListener("click", (e) => {
+      //   e.preventDefault();
+      //   console.log(e.target.innerHTML);
+      // });
+
+      fetch("http://192.168.100.75:8000/list")
+        .then((res) => res.json())
+        .then((json) => {
+          // console.log(json.list);
+          let tracks = json.list;
+          let trackListContainer = document.querySelector(".track-list");
+          // console.log(trackList);
+          tracks.forEach((track) => {
+            let trackEl = document.createElement("LI");
+            trackEl.innerHTML = track;
+            trackListContainer.appendChild(trackEl);
+          });
+        })
+        .then(() => {
+          var elements = document.querySelectorAll(".track-list > li");
+          console.log(elements);
+
+          elements.forEach((element) => {
+            element.addEventListener("click", function (e) {
+              e.preventDefault();
+              console.log(e.target.innerHTML);
+              player.source = {
+                type: "audio",
+                // title: "Example title",
+                sources: [
+                  {
+                    src: `http://192.168.100.75:8000/audio/${e.target.innerHTML}`,
+                    type: "audio/mp3",
+                  },
+                ],
+              };
+              player.play();
+            });
+          });
+        });
+    </script>
+  </body>
+</html>

@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const cors = require("cors");
+const path = require('path');
 const app = express();
 
 app.use(cors());
@@ -9,6 +10,10 @@ const MUSIC_DIR = "./music";
 if (!fs.existsSync(MUSIC_DIR)) {
   fs.mkdirSync(MUSIC_DIR);
 }
+
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, '/index.html'));
+});
 
 app.get("/audio/:id", (req, res) => {
   const range = req.headers.range;

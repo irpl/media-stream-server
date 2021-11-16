@@ -78,7 +78,7 @@
       //   console.log(e.target.innerHTML);
       // });
 
-      fetch("http://192.168.100.75:8000/list")
+      fetch("/list")
         .then((res) => res.json())
         .then((json) => {
           // console.log(json.list);
@@ -104,7 +104,7 @@
                 // title: "Example title",
                 sources: [
                   {
-                    src: `http://192.168.100.75:8000/audio/${e.target.innerHTML}`,
+                    src: `/audio/${e.target.innerHTML}`,
                     type: "audio/mp3",
                   },
                 ],
